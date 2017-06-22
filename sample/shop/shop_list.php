@@ -26,10 +26,12 @@ else
 <body>
     
 <?php
-    try {
+    
+print ' 人気商品-----------------<br/><br/>';
 
+try {
 //DB接続
-$dsn='mysql:dbname=shop;host=localhost;charset=utf8';
+$dsn='mysqldbname=shop;host=localhost;charset=utf8';
 $user='root';
 $password='';
 $dbh=new PDO($dsn,$user,$password);
@@ -39,35 +41,101 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 $sql='SELECT code,name,price FROM mst_product WHERE 1';
 $stmt1=$dbh->prepare($sql);
 $stmt1->execute();
+$p_code=array();
+$p_name=array();
+$p_price=array();
+$p_sum=array();
+while(true)
+{
+ $rec=$stmt1->fetch(PDO::FETCH_ASSOC);
+ if($rec==false)
+ {
+ break;
+ }
+ $p_code[]=$rec['code'];
+ $p_name[]=$rec['name'];
+ $p_price[]=$rec['price'];
+ $p_sum[]=0;
+}
+$pro_num=count($p_code);
+
 //注文データ
 $sql='SELECT code,code_product,quantity FROM dat_sales_product WHERE 1';
 $stmt2=$dbh->prepare($sql);
 $stmt2->execute();
+$s_code=array();
+$s_pro_code=array();
+$s_quantity=array();
+while(true)
+{
+ $rec=$stmt2->fetch(PDO::FETCH_ASSOC);
+ if($rec==false)
+ {
+ break;
+ }
+ 
+ $s_code[]=$rec['code'];
+ $s_pro_code[]=$rec['code_product'];
+ $s_quantity[]=$rec['quantity'];
+}
+$sales_num=count($s_code);
 
 //DB切断
 $dbh=null;
 
-         
 //集計
-while(true)
-{
-	$rec=$stmt2->fetch(PDO::FETCH_ASSOC);
-	if($rec==false)
-	{
-		break;
-	}
-	print $rec['code'];
-	print $rec['code_product'];
-        print $rec['quantity'];
-	print '<br />';
+for ($i = 0; $i < $sales_num; $i++){
+ for ($j = 0; $j < $pro_num; $j++){
+ if($s_pro_code[$i]===$p_code[$j]){
+ $p_sum[$j]=$p_sum[$j]+$s_quantity[$i];
+ break;
+ }
+ }
 }
-         
-//ノート
-//表示
+
+//ソート
+arsort($p_sum);
+
+//売上1位
+$key=key($p_sum);
+print '注文数1位 ';
+print '<a href="shop_product.php?procode='.$p_code[$key].'">';
+print $p_name[$key].'---';
+print $p_price[$key].'円';
+print ' 注文数'.$p_sum[$key].'個';
+print '</a>';
+print '<br />';
+
+//売上2位
+next($p_sum);
+$key=key($p_sum);
+print '注文数2位 ';
+print '<a href="shop_product.php?procode='.$p_code[$key].'">';
+print $p_name[$key].'---';
+print $p_price[$key].'円';
+print ' 注文数'.$p_sum[$key].'個';
+print '</a>';
+print '<br />';
+
+//売上3位
+next($p_sum);
+$key=key($p_sum);
+print '注文数3位 ';
+print '<a href="shop_product.php?procode='.$p_code[$key].'">';
+print $p_name[$key].'---';
+print $p_price[$key].'円';
+print ' 注文数'.$p_sum[$key].'個';
+print '</a>';
+print '<br />';
+
+    
+        
+  
 
 
         
-    } catch (Exception $ex) { print 'ただいま障害により大変ご迷惑をお掛けしております。';
+    } catch (Exception $ex) { 
+        print 'ただいま障害により大変ご迷惑をお掛けしております。';
 	 exit();
         
     }
@@ -75,11 +143,15 @@ while(true)
    ?> 
     
     
- <?php   
-try
-{
-
-$dsn='mysql:dbname=shop;host=localhost;charset=utf8';
+ <?php  
+ 
+ print '<br />'; 
+ print '商品一覧--------------------<br /><br />'; 
+ try 
+ {
+     
+ 
+$dsn='mysqldbname=shop;host=localhost;charset=utf8';
 $user='root';
 $password='';
 $dbh=new PDO($dsn,$user,$password);
@@ -119,5 +191,4 @@ catch (Exception $e)
 
 ?>
 
-</body>
-</html>
+</body> 
