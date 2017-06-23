@@ -21,7 +21,7 @@ else
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ろくまる農園</title>
+<title>YOMOTTO書籍</title>
 </head>
 <body>
 
@@ -51,6 +51,91 @@ while(true)
 	{
 		break;
 	}
+        
+<?php
+require_once('../common/common.php');
+?>
+    
+キーワードを選んでください。<br/>
+<from method="post"acion="">
+種類
+<?php_pulldown_type(); ?>
+サイズ
+<?php_pulldown_size(); ?>
+色
+<?php_pulldown_color(); ?>
+<br/>
+<input type="submit" value="絞り込み">
+</form>
+
+<?php
+
+//フリーキーワード
+$keyword='';
+if(isset($_POST['keyword'])){
+    $keyword=$_POST['keyword'];
+}
+if($keyword!==''){
+    print $keyword.'が含まれる商品';
+    print '<br/>';
+}
+//固定キーワード
+$type='';
+$size='';
+$color='';
+if(isset($_POST['type'])){
+    $type=$_POST['type'];
+    $size=$_POST['size'];
+    $color=$_POST['color'];
+}
+if($type!==''){
+    print $type.','.$size.','.$color.'に一致する商品';
+    print '<br/>';
+}
+
+white(true)
+{
+        $rec=$stmt->fetch(PD0::FETCH_ASSOC)
+            $type2=$_rec['type'];
+            $size2=$_rec['size'];
+            $color2=$_rec['color'];
+         if($rec==false)
+         {
+             break;
+         }
+            $disp=0;
+        //キーワド画から、または、キーワードが含まれるときの表示
+        if(($keyword==='')&&($type==='')){
+                $disp=1;
+        }
+        else if(($type==='')&&(strpos($rec['name'],$keyword)!==false)){
+            $disp=1;
+        }
+        else if(($keyword==='')&&((strpos($type2,$type)!==false)&&(strpos($size2,$size)!
+==false)&&(strpos($color2,$color)!==false))){
+            $disp=1;
+        }
+        
+        if($disp===1){
+            print '<a href="shop_product.php?procode='.$rec['code'].'">';
+            print $rec['name'].'---';
+            print $rec['price'].'円';
+            print '</a>';
+            print '<br />';
+        }      
+}
+
+
+if ($) {
+while (($dirElement = readdir($)) !== false) {
+
+}
+closedir($);
+}
+        
+        
+        
+        
 	print '<a href="shop_product.php?procode='.$rec['code'].'">';
 	print $rec['name'].'---';
 	print $rec['price'].'円';
