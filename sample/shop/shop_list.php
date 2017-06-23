@@ -21,7 +21,7 @@
  <html>
  <head>
  <meta charset="UTF-8">
- <title>ろくまる農園</title>
+ <title>YOMOTTO書籍販売</title>
  </head>
  <body>
  
@@ -126,6 +126,7 @@ print $p_name[$key].'---';
 print $p_price[$key].'円';
 print ' 注文数'.$p_sum[$key].'個';
 print '</a>';
+print '<br />';
 print '<br />';
 
 } catch (Exception $ex){
