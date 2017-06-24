@@ -62,6 +62,11 @@ for($i=0;$i<$max;$i++)
 	$stmt=$dbh->prepare($sql);
 	$data[0]=$cart[$i];
 	$stmt->execute($data);
+        
+        $sql='SELECT stock FROM dat_stock WHERE code_product=?';
+	$stmt=$dbh->prepare($sql);
+	$data2[0]=$cart[$i];
+	$stmt->execute($data2);
 
 	$rec=$stmt->fetch(PDO::FETCH_ASSOC);
 

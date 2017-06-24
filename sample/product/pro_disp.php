@@ -46,6 +46,14 @@ $pro_name=$rec['name'];
 $pro_price=$rec['price'];
 $pro_gazou_name=$rec['gazou'];
 
+$sql='SELECT stock FROM dat_stock WHERE code_product=?';
+$stmt2=$dbh->prepare($sql);
+$data2[]=$pro_code;
+$stmt2->execute($data2);
+
+$rec=$stmt2->fetch(PDO::FETCH_ASSOC);
+$pro_stock=$rec['stock'];
+
 $dbh=null;
 
 if($pro_gazou_name=='')
@@ -76,6 +84,9 @@ catch(Exception $e)
 <br />
 価格<br />
 <?php print $pro_price; ?>円
+<br />
+在庫数<br />
+<?php print $pro_stock; ?>個
 <br />
 <?php print $disp_gazou; ?>
 <br />

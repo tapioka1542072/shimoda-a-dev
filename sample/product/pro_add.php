@@ -30,6 +30,8 @@ else
 <input type="text" name="name" style="width:200px"><br />
 価格を入力してください。<br />
 <input type="text" name="price" style="width:50px"><br />
+在庫数を入力してください。<br />
+<input type="text" name="stock" style="width:50px"><br />
 画像を選んでください。<br />
 <input type="file" name="gazou" style="width:400px"><br />
 <br />

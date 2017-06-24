@@ -33,6 +33,7 @@ require_once('../common/common.php');
 $post=sanitize($_POST);
 $pro_name=$post['name'];
 $pro_price=$post['price'];
+$pro_stock=$post['stock'];
 $pro_gazou_name=$post['gazou_name'];
 
 $dsn='mysql:dbname=shop;host=localhost;charset=utf8';
@@ -47,6 +48,14 @@ $data[]=$pro_name;
 $data[]=$pro_price;
 $data[]=$pro_gazou_name;
 $stmt->execute($data);
+
+$pro_code = $dbh->lastInsertId();
+
+$sql='INSERT INTO dat_stock(code_product,stock) VALUES (?,?)';
+$stmt=$dbh->prepare($sql);
+$data2[]=$pro_code;
+$data2[]=$pro_stock;
+$stmt->execute($data2);
 
 $dbh=null;
 
