@@ -3,7 +3,7 @@
  session_regenerate_id(true);
  if(isset($_SESSION['member_login'])==false)
  {
- 	print 'ようこそゲスト様　';
+ 	print 'ようこそゲスト様�??';
  	print '<a href="member_login.html">会員ログイン</a><br />';
  	print '<br />';
  }
@@ -11,8 +11,8 @@
  {
  	print 'ようこそ';
  	print $_SESSION['member_name'];
- 	print ' 様　';
- 	print '<a href="member_logout.php">ログアウト</a><br />';
+ 	print ' 様�??';
+ 	print '<a href="member_logout.php">ログアウ�?</a><br />';
  	print '<br />';
  }
  ?>
@@ -27,18 +27,19 @@
  
  <?php
        
-print ' 人気商品<br/><br/>';
+print ' 人気商�?<br/><br/>';
+
  
 try {
     
- //DB接続
+ //DB接�?
 $dsn='mysql:dbname=shop;host=localhost;charset=utf8';
  $user='root';
  $password='';
  $dbh=new PDO($dsn,$user,$password);
  $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
-//商品データ
+//�?品データ
  $sql='SELECT code,name,price FROM mst_product WHERE 1';
  $stmt1=$dbh->prepare($sql);
  $stmt1->execute();
@@ -60,7 +61,7 @@ while(true)
 }
 $pro_num=count($p_code);
 
- //注文データ
+ //注�?�?ータ
  $sql='SELECT code,code_product,quantity FROM dat_sales_product WHERE 1';
  $stmt2=$dbh->prepare($sql);
  $stmt2->execute();
@@ -80,10 +81,10 @@ while(true)
 }
 $sales_num=count($s_code);
  
- //DB切断
+ //DB�?断
  $dbh=null;
         
- //集計
+ //�?�?
 for ($i = 0; $i < $sales_num; $i++){
  for ($j = 0; $j < $pro_num; $j++){
  if($s_pro_code[$i]===$p_code[$j]){
@@ -93,44 +94,44 @@ for ($i = 0; $i < $sales_num; $i++){
  }
  }
 
-//ソート
+//ソー�?
 arsort($p_sum);
 
-//売上1位
+//売�?1�?
 $key=key($p_sum);
-print '注文数1位 ';
+print '注�?数1�? ';
 print '<a href="shop_product.php?procode='.$p_code[$key].'">';
 print $p_name[$key].'---';
-print $p_price[$key].'円';
-print ' 注文数'.$p_sum[$key].'個';
+print $p_price[$key].'�?';
+print ' 注�?数'.$p_sum[$key].'�?';
 print '</a>';
 print '<br />';
 
-//売上2位
+//売�?2�?
 next($p_sum);
 $key=key($p_sum);
-print '注文数2位 ';
+print '注�?数2�? ';
 print '<a href="shop_product.php?procode='.$p_code[$key].'">';
 print $p_name[$key].'---';
-print $p_price[$key].'円';
-print ' 注文数'.$p_sum[$key].'個';
+print $p_price[$key].'�?';
+print ' 注�?数'.$p_sum[$key].'�?';
 print '</a>';
 print '<br />';
 
-//売上3位
+//売�?3�?
 next($p_sum);
 $key=key($p_sum);
-print '注文数3位 ';
+print '注�?数3�? ';
 print '<a href="shop_product.php?procode='.$p_code[$key].'">';
 print $p_name[$key].'---';
-print $p_price[$key].'円';
-print ' 注文数'.$p_sum[$key].'個';
+print $p_price[$key].'�?';
+print ' 注�?数'.$p_sum[$key].'�?';
 print '</a>';
 print '<br />';
 print '<br />';
 
 } catch (Exception $ex){
-         print 'ただいま障害により大変ご迷惑をお掛けしております。'; 
+         print 'ただ�?ま障害により大変ご迷惑をお掛けしております�??'; 
          exit(); 
     }
     
@@ -154,7 +155,7 @@ print '<br />';
  
  $dbh=null;
  
- print '商品一覧<br /><br />';
+ print '�?品�?覧<br /><br />';
  
  while(true)
  {
@@ -165,7 +166,7 @@ print '<br />';
  	}
  	print '<a href="shop_product.php?procode='.$rec['code'].'">';
  	print $rec['name'].'---';
- 	print $rec['price'].'円';
+ 	print $rec['price'].'�?';
  	print '</a>';
  	print '<br />';
  }
@@ -176,7 +177,7 @@ print '<br />';
  }
  catch (Exception $e)
  {
- 	 print 'ただいま障害により大変ご迷惑をお掛けしております。';
+ 	 print 'ただ�?ま障害により大変ご迷惑をお掛けしております�??';
  	 exit();
  }
  
