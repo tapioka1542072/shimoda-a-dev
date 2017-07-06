@@ -101,7 +101,6 @@ for ($i = 0; $i < $sales_num; $i++){
  for ($j = 0; $j < $pro_num; $j++){
     if($s_pro_code[$i]===$p_code[$j]){
     $p_sum[$j]=$p_sum[$j]+$s_quantity[$i];
-    break;
   }
  }
 }
