@@ -32,9 +32,53 @@ try
 
 if(isset($_SESSION['cart'])==true)
 {
+        //在庫チェック
 	$cart=$_SESSION['cart'];
 	$kazu=$_SESSION['kazu'];
 	$max=count($cart);
+        
+        require_once('../common/common.php');
+if (DEBUG) {
+$dsn='mysql:dbname=shop;host=localhost;charset=utf8';
+$user='root';
+$password='';
+$dbh=new PDO($dsn,$user,$password);
+$dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+}
+else{
+$dbServer = '127.0.0.1';
+$dbUser = $_SERVER['MYSQL_USER'];
+$dbPass = $_SERVER['MYSQL_PASSWORD'];
+$dbName = $_SERVER['MYSQL_DB'];
+$dsn = "mysql:host={$dbServer};dbname={$dbName};charset=utf8";
+$dbh = new PDO($dsn, $dbUser, $dbPass);
+}
+
+$flag_short=0;
+for($i=0;$i<$max;$i++)
+{
+	$sql='SELECT name,price FROM mst_product WHERE code=?';
+	$stmt=$dbh->prepare($sql);
+	$data[0]=$cart[$i];
+	$stmt->execute($data);
+        $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+        $name=$rec['name'];
+        $suryo=$kazu[$i];
+        
+          $sql='SELECT stock FROM dat_stock WHERE code_product=?';
+	$stmt=$dbh->prepare($sql);
+	$data[0]=$cart[$i];
+	$stmt->execute($data);
+        $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+        $pro_stock=$rec['stock'];
+     
+            if($pro_stock < $suryo){
+                $flag_short=1;
+            }
+}
+if($flag_short==1){
+    print '在庫が不足しています。<br />';
+}
 }
 else
 {

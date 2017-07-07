@@ -31,6 +31,7 @@ $post=sanitize($_POST);
 $pro_code=$post['code'];
 $pro_name=$post['name'];
 $pro_price=$post['price'];
+$pro_stock=$post['stock'];
 $pro_gazou_name_old=$post['gazou_name_old'];
 $pro_gazou=$_FILES['gazou'];
 
@@ -56,6 +57,17 @@ else
 	print '円<br />';
 }
 
+if(preg_match('/^[0-9]+$/',$pro_stock)==0)
+{
+	print '在庫数をきちんと入力してください。<br />';
+}
+else
+{
+	print '在庫数:';
+	print $pro_stock;
+	print '個<br />';
+}
+
 if($pro_gazou['size']>0)
 {
 	if($pro_gazou['size']>1000000)
@@ -70,7 +82,7 @@ if($pro_gazou['size']>0)
 	}
 }
 
-if($pro_name=='' || preg_match('/^[0-9]+$/',$pro_price)==0 || $pro_gazou['size']>1000000)
+if($pro_name=='' || preg_match('/^[0-9]+$/',$pro_price)==0  || preg_match('/^[0-9]+$/',$pro_stock)==0 || $pro_gazou['size']>1000000)
 {
 	print '<form>';
 	print '<input type="button" onclick="history.back()" value="戻る">';
@@ -83,6 +95,7 @@ else
 	print '<input type="hidden" name="code" value="'.$pro_code.'">';
 	print '<input type="hidden" name="name" value="'.$pro_name.'">';
 	print '<input type="hidden" name="price" value="'.$pro_price.'">';
+        print '<input type="hidden" name="stock" value="'.$pro_stock.'">';
 	print '<input type="hidden" name="gazou_name_old" value="'.$pro_gazou_name_old.'">';
 	print '<input type="hidden" name="gazou_name" value="'.$pro_gazou['name'].'">';
 	print '<br />';

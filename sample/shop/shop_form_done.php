@@ -30,20 +30,7 @@ $pass=$post['pass'];
 $danjo=$post['danjo'];
 $birth=$post['birth'];
 
-print $onamae.'様<br />';
-print 'ご注文ありがとうござました。<br />';
-print $email.'にメールを送りましたのでご確認ください。<br />';
-print '商品は以下の住所に発送させていただきます。<br />';
-print $postal1.'-'.$postal2.'<br />';
-print $address.'<br />';
-print $tel.'<br />';
-
-$honbun='';
-$honbun.=$onamae."様\n\nこのたびはご注文ありがとうございました。\n";
-$honbun.="\n";
-$honbun.="ご注文商品\n";
-$honbun.="--------------------\n";
-
+//在庫チェック
 $cart=$_SESSION['cart'];
 $kazu=$_SESSION['kazu'];
 $max=count($cart);
@@ -65,16 +52,59 @@ $dsn = "mysql:host={$dbServer};dbname={$dbName};charset=utf8";
 $dbh = new PDO($dsn, $dbUser, $dbPass);
 }
 
+$flag_short=0;
 for($i=0;$i<$max;$i++)
 {
 	$sql='SELECT name,price FROM mst_product WHERE code=?';
 	$stmt=$dbh->prepare($sql);
 	$data[0]=$cart[$i];
 	$stmt->execute($data);
+        $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+        $name=$rec['name'];
+        $suryo=$kazu[$i];
+        
+          $sql='SELECT stock FROM dat_stock WHERE code_product=?';
+	$stmt=$dbh->prepare($sql);
+	$data[0]=$cart[$i];
+	$stmt->execute($data);
+        $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+        $pro_stock=$rec['stock'];
+           
+            print '商品名'.' '.$name.' '.'在庫数'.' '.$pro_stock.' '.'注文数'.' '.$suryo.'<br /><br />';
+     
+            if($pro_stock < $suryo){
+                $flag_short=1;
+            }
+}
+if($flag_short==1){
+    print '注文数を見直してください。<br />';
+}
+else{//--------------------------------在庫不足の場合は以下を実行しない
+    
+print $onamae.'様<br />';
+print 'ご注文ありがとうございました。<br />';
+print $email.'にメールを送りしましたのでご確認ください。<br / >';
+print '商品は以下の住所に発送させていただきます。<br />';
+print $postal1.'-'.$postal2.'<br />';
+print $address.'<br />';
+print $tel.'<br />';
 
-	$rec=$stmt->fetch(PDO::FETCH_ASSOC);
+$honbun='';
+$honbun.=$onamae."様¥n\nこのたびはご注文ありがとうございました。\n";
+$honbun.="\n";
+$honbun.="ご注文商品\n";
+$honbun.="-------------------\n";
 
-	$name=$rec['name'];
+for($i=0;$i<$max;$i++)
+{
+	$sql='SELECT name,price FROM mst_product WHERE code=?';
+        $stmt=$dbh->prepare($sql);
+        $data[0]=$cart[$i];
+        $stmt->execute($data);
+        
+        $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $name=$rec['name'];
 	$price=$rec['price'];
 	$kakaku[]=$price;
 	$suryo=$kazu[$i];
@@ -84,7 +114,7 @@ for($i=0;$i<$max;$i++)
 	$honbun.=$price.'円 x ';
 	$honbun.=$suryo.'個 = ';
 	$honbun.=$shokei."円\n";
-}
+}        
 
 //$sql='LOCK TABLES dat_sales,dat_sales_product WRITE';
 //$stmt=$dbh->prepare($sql);
@@ -149,6 +179,32 @@ for($i=0;$i<$max;$i++)
 	$data[]=$kakaku[$i];
 	$data[]=$kazu[$i];
 	$stmt->execute($data);
+        
+           // $sql='UPDATE dat_stock SET stock=? WHERE code_product=?';
+           // $stmt=$dbh->prepare($sql);
+           // $data2=array();
+           // $data2[]=0;
+           // $data2[]=$cart[$i];
+           // $stmt->execute($data2);
+            
+            $sql='SELECT stock FROM dat_stock WHERE code_product=?';
+            $stmt=$dbh->prepare($sql);
+            $data2=array();
+            $data2[]=$cart[$i];
+            $stmt->execute($data2);
+            $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+         $pro_stock=$rec['stock'];
+            $suryou=$kazu[$i];
+            $sub_stock=$pro_stock-$suryou;
+            
+            $sql='UPDATE dat_stock SET stock=? WHERE code_product=?';
+            $stmt=$dbh->prepare($sql);
+            $data2=array();
+            $data2[]=$sub_stock;
+            $data2[]=$cart[$i];
+            $stmt->execute($data2);
+                       
+                  
 }
 
 //$sql='UNLOCK TABLES';
@@ -204,6 +260,8 @@ $honbun=html_entity_decode($honbun,ENT_QUOTES,'UTF-8');
 mb_language('Japanese');
 mb_internal_encoding('UTF-8');
 //mb_send_mail('info@rokumarunouen.co.jp',$title,$honbun,$header);
+
+}//--------------------------------在庫不足の場合は以上を実行しない
 
 }
 catch (Exception $e)

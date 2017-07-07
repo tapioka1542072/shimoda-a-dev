@@ -56,6 +56,15 @@ $rec=$stmt->fetch(PDO::FETCH_ASSOC);
 $pro_name=$rec['name'];
 $pro_gazou_name=$rec['gazou'];
 
+$sql='SELECT stock FROM dat_stock WHERE code_product=?';
+$stmt2=$dbh->prepare($sql);
+$data2[]=$pro_code;
+$stmt2->execute($data2);
+
+$rec=$stmt2->fetch(PDO::FETCH_ASSOC);
+$pro_stock=$rec['stock'];
+
+
 $dbh=null;
 
 if($pro_gazou_name=='')
@@ -84,12 +93,16 @@ catch(Exception $e)
 商品名<br />
 <?php print $pro_name; ?>
 <br />
+在庫数<br />
+<?php print $pro_stock; ?>
+<br />
 <?php print $disp_gazou; ?>
 <br />
 この商品を削除してよろしいですか？<br />
 <br />
 <form method="post" action="pro_delete_done.php">
 <input type="hidden" name="code" value="<?php print $pro_code; ?>">
+<input type="hidden" name="stock" value="<?php print $pro_stock; ?>">
 <input type="hidden" name="gazou_name" value="<?php print $pro_gazou_name; ?>">
 <input type="button" onclick="history.back()" value="戻る">
 <input type="submit" value="ＯＫ">

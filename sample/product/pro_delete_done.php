@@ -29,6 +29,7 @@ try
 {
 
 $pro_code=$_POST['code'];
+$pro_stock=$_POST['stock'];
 $pro_gazou_name=$_POST['gazou_name'];
 
 require_once('../common/common.php');
@@ -52,6 +53,11 @@ $sql='DELETE FROM mst_product WHERE code=?';
 $stmt=$dbh->prepare($sql);
 $data[]=$pro_code;
 $stmt->execute($data);
+
+$sql='DELETE FROM dat_stock WHERE code_product=?';
+$stmt2=$dbh->prepare($sql);
+$data2[]=$pro_code;
+$stmt2->execute($data2);
 
 $dbh=null;
 

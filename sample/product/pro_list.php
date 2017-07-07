@@ -49,6 +49,7 @@ $sql='SELECT code,name,price FROM mst_product WHERE 1';
 $stmt=$dbh->prepare($sql);
 $stmt->execute();
 
+
 $dbh=null;
 
 print '商品一覧<br /><br />';
@@ -65,6 +66,8 @@ while(true)
 	print $rec['name'].'---';
 	print $rec['price'].'円';
 	print '<br />';
+        
+       
 }
 print '<input type="submit" name="disp" value="参照">';
 print '<input type="submit" name="add" value="追加">';

@@ -34,6 +34,7 @@ $post=sanitize($_POST);
 $pro_code=$post['code'];
 $pro_name=$post['name'];
 $pro_price=$post['price'];
+$pro_stock=$post['stock'];
 $pro_gazou_name_old=$_POST['gazou_name_old'];
 $pro_gazou_name=$_POST['gazou_name'];
 
@@ -61,6 +62,12 @@ $data[]=$pro_price;
 $data[]=$pro_gazou_name;
 $data[]=$pro_code;
 $stmt->execute($data);
+
+$sql='UPDATE dat_stock SET stock=? WHERE code_product=?';
+$stmt=$dbh->prepare($sql);
+$data2[]=$pro_stock;
+$data2[]=$pro_code;
+$stmt->execute($data2);
 
 $dbh=null;
 
